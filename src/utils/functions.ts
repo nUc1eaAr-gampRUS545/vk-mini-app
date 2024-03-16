@@ -1,3 +1,7 @@
+type FactType = {
+  fact: string;
+  length: number;
+};
 export const clear = (textInput: React.RefObject<HTMLInputElement>) => {
     if (textInput.current) {
       textInput.current.value = "";
@@ -9,3 +13,14 @@ export const clear = (textInput: React.RefObject<HTMLInputElement>) => {
       const cursorPosition = firstSpaceIndex !== -1 ? firstSpaceIndex + 1 : data.length;
       return cursorPosition;
   }
+export  const setCursorAfterFirstWord = (
+  ref: React.RefObject<HTMLInputElement>,
+  data: FactType
+) => {
+  const firstWordLength = findFirstWord(data.fact);
+  if (ref.current) {
+    ref.current.value = data.fact;
+    ref.current.focus();
+    ref.current.setSelectionRange(firstWordLength, firstWordLength);
+  }
+};

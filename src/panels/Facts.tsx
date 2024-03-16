@@ -12,7 +12,8 @@ import {
 } from "@vkontakte/vkui";
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router";
 import { Icon16Clear } from "@vkontakte/icons";
-import { clear, findFirstWord } from "../utils/functions";
+import { clear, setCursorAfterFirstWord } from "../utils/functions";
+import { getFacts } from "../api/api";
 type FactType = {
   fact: string;
   length: number;
@@ -26,24 +27,12 @@ export const Facts: FC<NavIdProps> = ({ id }) => {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const textInput = useRef<HTMLInputElement>(null);
- 
-  const setCursorAfterFirstWord = (ref:React.RefObject<HTMLInputElement>, data:FactType) => {
-    const firstWordLength = findFirstWord(data.fact)
-    if (ref.current) {
-      ref.current.value = data.fact;
-      ref.current.focus;
-      ref.current.setSelectionRange(firstWordLength, firstWordLength);
-      
-    }
-  };
-  
+
   const handleClickButton = () => {
     setIsLoading(true);
-    fetch("https://catfact.ninja/fact")
-      .then((response) => response.json())
+    getFacts()
       .then((value: FactType) => {
-       
-        setCursorAfterFirstWord(textInput, value)
+        setCursorAfterFirstWord(textInput, value);
         setFactInServer(value);
         setIsLoading(false);
       })
@@ -52,8 +41,6 @@ export const Facts: FC<NavIdProps> = ({ id }) => {
         console.error(err);
       });
   };
-
- 
 
   return (
     <Panel id={id}>
@@ -73,12 +60,12 @@ export const Facts: FC<NavIdProps> = ({ id }) => {
             value={factInServer.fact}
             getRef={textInput}
             type="text"
-            onFocus={ ()=>setCursorAfterFirstWord(textInput, factInServer)}
+            onFocus={() => setCursorAfterFirstWord(textInput, factInServer)}
             after={
               <IconButton
                 hoverMode="opacity"
                 label="Очистить поле"
-                onClick={()=>clear(textInput)}
+                onClick={() => clear(textInput)}
               >
                 <Icon16Clear />
               </IconButton>

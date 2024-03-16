@@ -14,6 +14,7 @@ import {
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router";
 import { Icon16Clear } from "@vkontakte/icons";
 import { clear } from "../utils/functions";
+import { searchNameInServer } from "../api/api";
 type NameInfoType = {
   count: number;
   name: string;
@@ -42,8 +43,7 @@ export const SearchPanel: FC<NavIdProps> = ({ id }) => {
   };
   const handleClickButton = () => {
     setIsLoading(true);
-    fetch(`https://api.agify.io?name=${inputValue}`)
-      .then((response) => response.json())
+    searchNameInServer(inputValue)
       .then((res: NameInfoType) => {
         setActiveInfoShow(true);
      
